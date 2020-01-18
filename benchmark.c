@@ -13,9 +13,9 @@
 
 #endif
 
-// On Cori
-// 2.3 GHz * 8 vector width * 2 flops for FMA = 36.8 GF/s
-#define MAX_SPEED 36.8
+#ifndef MAX_SPEED
+#error "Must set max speed with -DMAX_SPEED=... or similar"
+#endif
 
 /* reference_dgemm wraps a call to the BLAS-3 routine DGEMM, via the standard FORTRAN interface - hence the reference semantics. */
 #define DGEMM dgemm_
@@ -116,7 +116,7 @@ int main(int argc, char **argv) {
         /* Measure performance (in Gflops/s). */
 
         /* Time a "sufficiently long" sequence of calls to reduce noise */
-        double Gflops_s, seconds = -1.0;
+        double Gflops_s = 0.0, seconds = -1.0;
         double timeout = 0.1; // "sufficiently long" := at least 1/10 second.
         for (int n_iterations = 1; seconds < timeout; n_iterations *= 2) {
             /* Warm-up */
