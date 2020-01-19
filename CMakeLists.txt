@@ -41,9 +41,4 @@ foreach (BENCHMARK IN ITEMS naive blocked blas)
 
     # Generate job script
     configure_file(job.in job-${BENCHMARK})
-
-    # Generate job target
-    if ("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
-        # TODO: add job submission targets
-    endif ()
 endforeach ()
