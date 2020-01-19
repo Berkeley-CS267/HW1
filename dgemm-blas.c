@@ -1,7 +1,7 @@
-extern void dgemm_(char*, char*, int*, int*, int*, double*,
-                   double*, int*, double*, int*, double*, double*, int*); 
+extern void dgemm_(char *, char *, int *, int *, int *, double *,
+                   double *, int *, double *, int *, double *, double *, int *);
 
-const char* dgemm_desc = "Reference dgemm.";
+const char *dgemm_desc = "Reference dgemm.";
 
 /*
  * This routine performs a dgemm operation
@@ -11,16 +11,15 @@ const char* dgemm_desc = "Reference dgemm.";
  * This function wraps a call to the BLAS-3 routine DGEMM,
  * via the standard FORTRAN interface - hence the reference semantics.
  */
-void square_dgemm(int N, double* A, double* B, double* C)
-{
-  char TRANSA = 'N';
-  char TRANSB = 'N';
-  int M = N;
-  int K = N;
-  double ALPHA = 1.;
-  double BETA = 1.;
-  int LDA = N;
-  int LDB = N;
-  int LDC = N;
-  dgemm_(&TRANSA, &TRANSB, &M, &N, &K, &ALPHA, A, &LDA, B, &LDB, &BETA, C, &LDC);
+void square_dgemm(int N, double *A, double *B, double *C) {
+    char TRANSA = 'N';
+    char TRANSB = 'N';
+    int M = N;
+    int K = N;
+    double ALPHA = 1.;
+    double BETA = 1.;
+    int LDA = N;
+    int LDB = N;
+    int LDC = N;
+    dgemm_(&TRANSA, &TRANSB, &M, &N, &K, &ALPHA, A, &LDA, B, &LDB, &BETA, C, &LDC);
 }
