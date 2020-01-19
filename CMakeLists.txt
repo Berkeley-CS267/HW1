@@ -8,12 +8,12 @@ set(MAX_SPEED 36.8 CACHE STRING "The max speed of the CPU in GF/s")
 
 # We require the GNU compiler for this assignment.
 if (NOT "${CMAKE_C_COMPILER_ID}" STREQUAL "GNU")
-    set(PRG-Cray "swap PrgEnv-cray")
-    set(PRG-Intel "swap PrgEnv-intel")
-    set(PRG-LLVM "swap PrgEnv-llvm")
+    set(Prg-Cray "PrgEnv-cray")
+    set(Prg-Intel "PrgEnv-intel")
+    set(Prg-Clang "PrgEnv-llvm")
     message(WARNING
             "Must use GNU Compiler for submission. Make sure you ran:\n"
-            "module ${PRG-${CMAKE_C_COMPILER_ID}} PrgEnv-gnu")
+            "module swap ${Prg-${CMAKE_C_COMPILER_ID}} PrgEnv-gnu")
 endif ()
 
 # Common library target for benchmarking.
