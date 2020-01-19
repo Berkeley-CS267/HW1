@@ -129,7 +129,7 @@ allocation quicker.
 ## Submission
 
 Once you're happy with your performance, you can get ready to submit.
-First, make sure that your write up is in the same directory as this README as is named `teamNN_hw1.pdf` where `NN`
+First, make sure that your write up is in the same directory as this README and is named `teamNN_hw1.pdf` where `NN`
 is your team's **two-digit** team number.
 Then configure the build with your team number:
 
