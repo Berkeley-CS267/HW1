@@ -147,3 +147,14 @@ teamNN_hw1/dgemm-blocked.c
 ```
 
 If you prefer to create the archive yourself, make sure that it follows this structure _exactly_.
+
+## Windows Instructions
+
+We recommend using [CLion](https://www.jetbrains.com/clion/) ([free for students](https://www.jetbrains.com/student/))
+and [WSL](https://docs.microsoft.com/en-us/windows/wsl/about) (Ubuntu 18.04.3 LTS) for developing on Windows.
+CLion provides [instructions](https://www.jetbrains.com/help/clion/how-to-use-wsl-development-environment-in-clion.html)
+for setting up the IDE for use with WSL.
+Be sure to install `libopenblas-dev` from within Ubuntu as well.
+
+The benchmarking code was not written with non-POSIX compatibility in mind, so Windows compilers (including MinGW)
+will have issues compiling the project.
