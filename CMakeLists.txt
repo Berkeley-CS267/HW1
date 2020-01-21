@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.14)
-project(hw1 LANGUAGES C)
+project(hw1 LANGUAGES C CXX)
 
 find_package(BLAS REQUIRED)
 
@@ -28,14 +28,14 @@ if (NOT "${CMAKE_C_COMPILER_ID}" STREQUAL "GNU")
 endif ()
 
 # Common library target for benchmarking.
-add_library(benchmark OBJECT benchmark.c)
+add_library(benchmark OBJECT benchmark.cpp)
 target_compile_definitions(benchmark PRIVATE MAX_SPEED=${MAX_SPEED})
 
 foreach (BENCHMARK IN ITEMS naive blocked blas)
     # Create benchmarking executable
     add_executable(benchmark-${BENCHMARK} dgemm-${BENCHMARK}.c)
     target_link_libraries(benchmark-${BENCHMARK} PRIVATE benchmark ${BLAS_LIBRARIES})
-    target_compile_features(benchmark-${BENCHMARK} PRIVATE c_std_11 c_restrict)
+    target_compile_features(benchmark-${BENCHMARK} PRIVATE c_std_11)
     target_compile_options(benchmark-${BENCHMARK} PRIVATE -Wall -pedantic -march=haswell)
 
     # Generate job script

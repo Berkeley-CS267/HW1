@@ -1,24 +1,24 @@
-#include <stdlib.h> // For: exit, drand48, malloc, free, NULL, EXIT_FAILURE
-#include <stdio.h>  // For: perror
-#include <string.h> // For: memset
+#include <cstdlib> // For: exit, malloc, free, NULL, EXIT_FAILURE
+#include <cstdio>  // For: perror
+#include <cstring> // For: memset
 
-#include <float.h>  // For: DBL_EPSILON
-#include <math.h>   // For: fabs
+#include <cfloat>  // For: DBL_EPSILON
+#include <cmath>   // For: fabs
 
-#ifdef GETTIMEOFDAY
-#include <sys/time.h> // For struct timeval, gettimeofday
-#else
-
-#include <time.h> // For struct timespec, clock_gettime, CLOCK_MONOTONIC
-
-#endif
+#include <vector>
+#include <random>
+#include <chrono>
 
 #ifndef MAX_SPEED
 #error "Must set max speed with -DMAX_SPEED=... or similar"
 #endif
 
-/* reference_dgemm wraps a call to the BLAS-3 routine DGEMM, via the standard FORTRAN interface - hence the reference semantics. */
+/* reference_dgemm wraps a call to the BLAS-3 routine DGEMM,
+ * via the standard FORTRAN interface - hence the reference semantics.
+ */
 #define DGEMM dgemm_
+
+extern "C" {
 
 extern void
 DGEMM(char *, char *, int *, int *, int *, double *, double *, int *, double *, int *, double *, double *, int *);
@@ -40,16 +40,6 @@ extern const char *dgemm_desc;
 
 extern void square_dgemm(int, double *, double *, double *);
 
-double wall_time() {
-#ifdef GETTIMEOFDAY
-    struct timeval t;
-    gettimeofday (&t, NULL);
-    return 1.*t.tv_sec + 1.e-6*t.tv_usec;
-#else
-    struct timespec t;
-    clock_gettime(CLOCK_MONOTONIC, &t);
-    return 1. * t.tv_sec + 1.e-9 * t.tv_nsec;
-#endif
 }
 
 void die(const char *message) {
@@ -58,8 +48,11 @@ void die(const char *message) {
 }
 
 void fill(double *p, int n) {
+    static std::random_device rd;
+    static std::default_random_engine gen(rd());
+    static std::uniform_real_distribution<> dis(-1.0, 1.0);
     for (int i = 0; i < n; ++i)
-        p[i] = 2 * drand48() - 1; // Uniformly distributed over [-1, 1]
+        p[i] = 2 * dis(gen) - 1;
 }
 
 void absolute_value(double *p, int n) {
@@ -94,17 +87,14 @@ int main(int argc, char **argv) {
     int nmax = test_sizes[nsizes - 1];
 
     /* allocate memory for all problems */
-    double *buf = NULL;
-    buf = (double *) malloc(3 * nmax * nmax * sizeof(double));
-    if (buf == NULL) { die("failed to allocate largest problem size"); }
+    auto *buf = (double *) malloc(3 * nmax * nmax * sizeof(double));
+    if (buf == nullptr) { die("failed to allocate largest problem size"); }
 
-    double Mflops_s[nsizes], per[nsizes], aveper;
+    std::vector<double> per;
 
     /* For each test size */
-    for (int isize = 0; isize < sizeof(test_sizes) / sizeof(test_sizes[0]); ++isize) {
+    for (int n : test_sizes) {
         /* Create and fill 3 random matrices A,B,C*/
-        int n = test_sizes[isize];
-
         double *A = buf + 0;
         double *B = A + nmax * nmax;
         double *C = B + nmax * nmax;
@@ -123,21 +113,23 @@ int main(int argc, char **argv) {
             square_dgemm(n, A, B, C);
 
             /* Benchmark n_iterations runs of square_dgemm */
-            seconds = -wall_time();
+            auto start = std::chrono::steady_clock::now();
             for (int it = 0; it < n_iterations; ++it) {
                 square_dgemm(n, A, B, C);
             }
-            seconds += wall_time();
+            auto end = std::chrono::steady_clock::now();
+            std::chrono::duration<double> diff = end - start;
+            seconds = diff.count();
 
             /*  compute Gflop/s rate */
             Gflops_s = 2.e-9 * n_iterations * n * n * n / seconds;
         }
 
         /* Storing Mflop rate and calculating percentage of peak */
-        Mflops_s[isize] = Gflops_s * 1000;
-        per[isize] = Gflops_s * 100 / MAX_SPEED;
+        double Mflops_s = Gflops_s * 1000;
+        per.push_back(Gflops_s * 100 / MAX_SPEED);
 
-        printf("Size: %d\tMflop/s: %8g\tPercentage:%6.2lf\n", n, Mflops_s[isize], per[isize]);
+        printf("Size: %d\tMflop/s: %8g\tPercentage:%6.2lf\n", n, Mflops_s, per.back());
 
         /* Ensure that error does not exceed the theoretical error bound. */
 
@@ -167,11 +159,11 @@ int main(int argc, char **argv) {
     }
 
     /* Calculating average percentage of peak reached by algorithm */
-    aveper = 0;
+    double aveper = 0;
     for (int i = 0; i < nsizes; i++) {
         aveper += per[i];
     }
-    aveper /= nsizes * 1.0;
+    aveper /= nsizes;
 
     /* Printing average percentage to screen */
     printf("Average percentage of Peak = %g\n", aveper);
