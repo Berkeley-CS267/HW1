@@ -156,5 +156,6 @@ CLion provides [instructions](https://www.jetbrains.com/help/clion/how-to-use-ws
 for setting up the IDE for use with WSL.
 Be sure to install `libopenblas-dev` from within Ubuntu as well.
 
-The benchmarking code was not written with non-POSIX compatibility in mind, so Windows compilers (including MinGW)
-will have issues compiling the project.
+The starter code will compiler with MSVC and Visual Studio on Windows, but we do not recommend trying to write
+first with MSVC and then porting to GCC (the required compiler).
+MSVC does not implement many useful features in the C language and is fundamentally a C++ compiler.
