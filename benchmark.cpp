@@ -66,7 +66,7 @@ int main(int argc, char **argv) {
 
     /* Test sizes should highlight performance dips at multiples of certain powers-of-two */
 
-#ifdef NDEBUG
+#ifdef ALL_SIZES
     /* Multiples-of-32, +/- 1. */
     int test_sizes[] =
             {31, 32, 33, 63, 64, 65, 95, 96, 97, 127, 128, 129, 159, 160, 161, 191, 192, 193, 223, 224, 225, 255, 256,

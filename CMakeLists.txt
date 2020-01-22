@@ -3,6 +3,9 @@ project(hw1 LANGUAGES C CXX)
 
 find_package(BLAS REQUIRED)
 
+# Run the full set of tests
+option(ALL_SIZES "Test an extended set of sizes; will take more CPU time." OFF)
+
 # On Cori -- 2.3 GHz * 8 vector width * 2 flops for FMA = 36.8 GF/s
 set(MAX_SPEED 36.8 CACHE STRING "The max speed of the CPU in GF/s")
 
@@ -29,7 +32,7 @@ endif ()
 
 # Common library target for benchmarking.
 add_library(benchmark OBJECT benchmark.cpp)
-target_compile_definitions(benchmark PRIVATE MAX_SPEED=${MAX_SPEED})
+target_compile_definitions(benchmark PRIVATE MAX_SPEED=${MAX_SPEED} $<$<BOOL:${ALL_SIZES}>:ALL_SIZES>)
 target_compile_features(benchmark PRIVATE cxx_std_11)
 
 foreach (BENCHMARK IN ITEMS naive blocked blas)

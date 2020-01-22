@@ -54,6 +54,7 @@ Only `CMAKE_BUILD_TYPE` is required, though there are more variables that you mi
 3. `MAX_SPEED` -- this should be equal to the maximum number of gigaflops-per-second (GF/s) your processor can execute.
 It is set to 36.8 by default, which matches Cori's processors.
 4. `TEAM_NO` -- when you are ready to submit your assignment, set this to be your **two-digit** team number.
+5. `ALL_SIZES` -- set to `ON` to test against a large set of matrix sizes. `OFF` by default.
 
 When you build in Debug mode, optimizations are disabled.
 Yet when writing parallel code, it is often the case that problems arise only when optimizations are enabled.
