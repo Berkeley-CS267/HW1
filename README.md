@@ -130,21 +130,21 @@ allocation quicker.
 ## Submission
 
 Once you're happy with your performance, you can get ready to submit.
-First, make sure that your write up is in the same directory as this README and is named `teamNN_hw1.pdf` where `NN`
-is your team's **two-digit** team number.
-Then configure the build with your team number:
+First, make sure that your write up is in the same directory as this README and is named `cs267GroupNN_hw1.pdf` where `NN`
+is your team's **two-digit** group number.
+Then configure the build with your group number:
 
 ```
-[student@cori10 build]$ cmake -DTEAM_NO=NN ..
+[student@cori10 build]$ cmake -DGROUP_NO=NN ..
 [student@cori10 build]$ make package
 ```
 
 This should produce an archive containing the following files:
 
 ```
-[demmel@cori10 build]$ tar tfz teamNN_hw1.tar.gz 
-teamNN_hw1/teamNN_hw1.pdf
-teamNN_hw1/dgemm-blocked.c
+[demmel@cori10 build]$ tar tfz cs267GroupNN_hw1.tar.gz 
+cs267GroupNN_hw1/cs267GroupNN_hw1.pdf
+cs267GroupNN_hw1/dgemm-blocked.c
 ```
 
 If you prefer to create the archive yourself, make sure that it follows this structure _exactly_.
