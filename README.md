@@ -14,9 +14,9 @@ Make sure it is set to **PRIVATE**.
 3. Once this is done, run the following commands:
 
 ```
-[student@cori10 hw1]$ git remote rename origin staff
-[student@cori10 hw1]$ git remote add origin https://github.com/YOUR_GITHUB_USERNAME/cs267-hw1.git
-[student@cori10 hw1]$ git push -u origin master
+student@cori04:~/hw1> git remote rename origin staff
+student@cori04:~/hw1> git remote add origin https://github.com/YOUR_GITHUB_USERNAME/cs267-hw1.git
+student@cori04:~/hw1> git push -u origin master
 ```
 
 If you prefer to use SSH to connect to GitHub,
@@ -32,8 +32,8 @@ First, note that this file is in the _source directory_.
 You will run CMake commands from the _build directory_, which you create by running
 
 ```
-[student@cori10 hw1]$ mkdir build
-[student@cori10 hw1]$ cd build
+student@cori04:~/hw1> mkdir build
+student@cori04:~/hw1> cd build
 ```
 
 ## Build configuration
@@ -42,7 +42,7 @@ From this _build directory_, it is now possible to _configure_ the build.
 The basic way to do this is:
 
 ```
-[student@cori10 build]$ cmake -DCMAKE_BUILD_TYPE=Release ..
+student@cori04:~/hw1/build> cmake -DCMAKE_BUILD_TYPE=Release ..
 ```
 
 This command tells CMake to generate the build files for HW1 in _Release_ mode.
@@ -61,13 +61,13 @@ Yet when writing parallel code, it is often the case that problems arise only wh
 You can recover debugging symbols in Release mode (for use with `gdb`) by running:
 
 ```
-[student@cori10 build]$ cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_FLAGS="-g3" ..
+student@cori04:~/hw1/build> cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_FLAGS="-g3" ..
 ```
 
 Similarly, you can enable optimizations in Debug mode by running:
 
 ```
-[student@cori10 build]$ cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_FLAGS="-O2" ..
+student@cori04:~/hw1/build> cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_FLAGS="-O2" ..
 ```
 
 ## Compiling
@@ -75,13 +75,13 @@ Similarly, you can enable optimizations in Debug mode by running:
 Once your build is configured, you can actually compile by running `make` from the build directory.
 
 ```
-[student@cori10 build]$ make
+student@cori04:~/hw1/build> make
 ```
 
 This will produce several files:
 
 ```
-[student@cori10 build]$ ls
+student@cori04:~/hw1/build> ls
 benchmark-blas     CMakeCache.txt       job-blas     Makefile
 benchmark-blocked  CMakeFiles           job-blocked
 benchmark-naive    cmake_install.cmake  job-naive
@@ -95,7 +95,7 @@ You can freely make configuration changes to the build and re-run make however y
 To run your code on the cluster, you can use the generated `job-blocked` script like so:
 
 ```
-[student@cori10 build]$ sbatch job-blocked
+student@cori04:~/hw1/build> sbatch job-blocked
 Submitted batch job 9637622
 ```
 
@@ -103,10 +103,10 @@ The job is now submitted to Cori's job queue.
 We can now check on the status of our submitted job using a few different commands.
 
 ```
-[student@cori10 build]$ squeue -u demmel
+student@cori04:~/hw1/build> squeue -u demmel
              JOBID PARTITION     NAME     USER ST       TIME  NODES NODELIST(REASON)
            9637622     debug job-bloc   demmel PD       0:00      1 (Priority)
-[student@cori10 build]$ sqs
+student@cori04:~/hw1/build> sqs
 JOBID    ST  USER   NAME         NODES REQUESTED USED  SUBMIT               QOS        SCHEDULED_START    REASON   
 9637622  PD  demmel  job-blocked  1     1:00      0:00  2018-01-19T11:42:17  debug_hsw  avail_in_~1.0_hrs  Priority
 ```
@@ -135,14 +135,14 @@ is your team's **two-digit** group number.
 Then configure the build with your group number:
 
 ```
-[student@cori10 build]$ cmake -DGROUP_NO=NN ..
-[student@cori10 build]$ make package
+student@cori04:~/hw1/build> cmake -DGROUP_NO=NN ..
+student@cori04:~/hw1/build> make package
 ```
 
 This should produce an archive containing the following files:
 
 ```
-[demmel@cori10 build]$ tar tfz cs267GroupNN_hw1.tar.gz 
+student@cori04:~/hw1/build> tar tfz cs267GroupNN_hw1.tar.gz 
 cs267GroupNN_hw1/cs267GroupNN_hw1.pdf
 cs267GroupNN_hw1/dgemm-blocked.c
 ```
