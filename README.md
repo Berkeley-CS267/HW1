@@ -160,3 +160,26 @@ Be sure to install `libopenblas-dev` from within Ubuntu as well.
 The starter code will compiler with MSVC and Visual Studio on Windows, but we do not recommend trying to write
 first with MSVC and then porting to GCC (the required compiler).
 MSVC does not implement many useful features in the C language and is fundamentally a C++ compiler.
+
+## GCC Special Features
+
+If you find that certain compiler flags offer a significant speed up to your code, you should add them to your
+source file using the GCC optimize pragma.
+For instance if you wanted to specifically enable loop peeling, you could add the following line to the top of your file.
+
+```
+#pragma GCC optimize ("peel-loops")
+```
+
+This works with any -f flag (eg. -fpeel-loops)
+Note that this applies to all functions.
+If you want to just tune the optimization of a single function use
+
+```
+__attribute__((optimize("peel-loops")))
+void my_func() { ... }
+```
+
+See it in action here: https://godbolt.org/z/RvXfty.
+
+Read more in the GCC documentation here: https://gcc.gnu.org/onlinedocs/gcc/Common-Function-Attributes.html#Common-Function-Attributes 
