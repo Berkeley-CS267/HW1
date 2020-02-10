@@ -1,49 +1,27 @@
-#include <cstdio>  // For: perror
-#include <cstdlib> // For: exit, malloc, free, NULL, EXIT_FAILURE
-#include <cstring> // For: memset
-
-#include <cfloat> // For: DBL_EPSILON
-#include <cmath>  // For: fabs
-
+#include <algorithm>
 #include <chrono>
+#include <iomanip>
+#include <iostream>
 #include <random>
 #include <vector>
+
+#include <cmath> // For: fabs
+
+#include <cblas.h>
 
 #ifndef MAX_SPEED
 #error "Must set max speed with -DMAX_SPEED=... or similar"
 #endif
 
-/* reference_dgemm wraps a call to the BLAS-3 routine DGEMM,
- * via the standard FORTRAN interface - hence the reference semantics.
- */
-#define DGEMM dgemm_
-
 extern "C" {
-
-extern void DGEMM(char*, char*, int*, int*, int*, double*, double*, int*, double*, int*, double*,
-                  double*, int*);
-
-void reference_dgemm(int N, double ALPHA, double* A, double* B, double* C) {
-    char TRANSA = 'N';
-    char TRANSB = 'N';
-    int M = N;
-    int K = N;
-    double BETA = 1.;
-    int LDA = N;
-    int LDB = N;
-    int LDC = N;
-    DGEMM(&TRANSA, &TRANSB, &M, &N, &K, &ALPHA, A, &LDA, B, &LDB, &BETA, C, &LDC);
-}
-
 /* Your function must have the following signature: */
 extern const char* dgemm_desc;
 
 extern void square_dgemm(int, double*, double*, double*);
 }
 
-void die(const char* message) {
-    perror(message);
-    exit(EXIT_FAILURE);
+void reference_dgemm(int n, double alpha, double* A, double* B, double* C) {
+    cblas_dgemm(CblasColMajor, CblasNoTrans, CblasNoTrans, n, n, n, alpha, A, n, B, n, 1., C, n);
 }
 
 void fill(double* p, int n) {
@@ -54,14 +32,11 @@ void fill(double* p, int n) {
         p[i] = 2 * dis(gen) - 1;
 }
 
-void absolute_value(double* p, int n) {
-    for (int i = 0; i < n; ++i)
-        p[i] = fabs(p[i]);
-}
-
 /* The benchmarking program */
 int main(int argc, char** argv) {
-    printf("Description:\t%s\n\n", dgemm_desc);
+    std::cout << "Description:\t" << dgemm_desc << std::endl << std::endl;
+
+    std::cout << std::fixed << std::setprecision(2);
 
     /* Test sizes should highlight performance dips at multiples of certain powers-of-two */
 
@@ -86,17 +61,13 @@ int main(int argc, char** argv) {
     int nmax = test_sizes[nsizes - 1];
 
     /* allocate memory for all problems */
-    auto* buf = (double*)malloc(3 * nmax * nmax * sizeof(double));
-    if (buf == nullptr) {
-        die("failed to allocate largest problem size");
-    }
-
+    std::vector<double> buf(3 * nmax * nmax);
     std::vector<double> per;
 
     /* For each test size */
     for (int n : test_sizes) {
         /* Create and fill 3 random matrices A,B,C*/
-        double* A = buf + 0;
+        double* A = buf.data() + 0;
         double* B = A + nmax * nmax;
         double* C = B + nmax * nmax;
 
@@ -130,12 +101,15 @@ int main(int argc, char** argv) {
         double Mflops_s = Gflops_s * 1000;
         per.push_back(Gflops_s * 100 / MAX_SPEED);
 
-        printf("Size: %d\tMflop/s: %8g\tPercentage:%6.2lf\n", n, Mflops_s, per.back());
+        std::cout << "Size: " << n                  //
+                  << "\tMflops/s: " << Mflops_s     //
+                  << "\tPercentage: " << per.back() //
+                  << std::endl;
 
         /* Ensure that error does not exceed the theoretical error bound. */
 
         /* C := A * B, computed with square_dgemm */
-        memset(C, 0, n * n * sizeof(double));
+        std::fill(C, &C[n * n], 0.0);
         square_dgemm(n, A, B, C);
 
         /* Do not explicitly check that A and B were unmodified on square_dgemm exit
@@ -144,18 +118,21 @@ int main(int argc, char** argv) {
         reference_dgemm(n, -1., A, B, C);
 
         /* A := |A|, B := |B|, C := |C| */
-        absolute_value(A, n * n);
-        absolute_value(B, n * n);
-        absolute_value(C, n * n);
+        std::transform(A, &A[n * n], A, fabs);
+        std::transform(B, &B[n * n], B, fabs);
+        std::transform(C, &C[n * n], C, fabs);
 
         /* C := |C| - 3 * e_mach * n * |A| * |B|, computed with reference_dgemm */
-        reference_dgemm(n, -3. * DBL_EPSILON * n, A, B, C);
+        const auto e_mach = std::numeric_limits<double>::epsilon();
+        reference_dgemm(n, -3. * e_mach * n, A, B, C);
 
         /* If any element in C is positive, then something went wrong in square_dgemm */
         for (int i = 0; i < n * n; ++i) {
             if (C[i] > 0) {
-                die("*** FAILURE *** Error in matrix multiply exceeds componentwise error "
-                    "bounds.\n");
+                std::cerr << "*** FAILURE *** Error in matrix multiply exceeds componentwise error "
+                             "bounds."
+                          << std::endl;
+                return 1;
             }
         }
     }
@@ -168,9 +145,7 @@ int main(int argc, char** argv) {
     aveper /= nsizes;
 
     /* Printing average percentage to screen */
-    printf("Average percentage of Peak = %g\n", aveper);
-
-    free(buf);
+    std::cout << "Average percentage of Peak = " << aveper << std::endl;
 
     return 0;
 }
