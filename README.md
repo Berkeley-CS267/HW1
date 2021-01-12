@@ -16,11 +16,15 @@ Make sure it is set to **PRIVATE**.
 ```
 student@cori04:~/hw1> git remote rename origin staff
 student@cori04:~/hw1> git remote add origin https://github.com/YOUR_GITHUB_USERNAME/cs267-hw1.git
-student@cori04:~/hw1> git push -u origin master
+student@cori04:~/hw1> git push -u origin main
 ```
 
 If you prefer to use SSH to connect to GitHub,
 [follow these instructions](https://help.github.com/en/github/using-git/which-remote-url-should-i-use#cloning-with-ssh-urls)
+
+## Module configuration
+
+Please [follow these instructions](https://bitbucket.org/Berkeley-CS267/cori-tutorial/src/master/cori-tutorial.md) to ensure your module configuration is correct to run the build system.
 
 ## Build system
 
