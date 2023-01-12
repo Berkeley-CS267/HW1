@@ -36,8 +36,8 @@ First, note that this file is in the _source directory_.
 You will run CMake commands from the _build directory_, which you create by running
 
 ```
-student@cori04:~/hw1> mkdir build
-student@cori04:~/hw1> cd build
+student@login04:~/hw1> mkdir build
+student@login04:~/hw1> cd build
 ```
 
 ## Build configuration
@@ -107,12 +107,17 @@ The job is now submitted to Cori's job queue.
 We can now check on the status of our submitted job using a few different commands.
 
 ```
-student@login04:~/hw1/build> squeue -u demmel
+student@login04:~/hw1/build> squeue -u student
              JOBID PARTITION     NAME     USER ST       TIME  NODES NODELIST(REASON)
-           9637622     debug job-bloc   demmel PD       0:00      1 (Priority)
+           4613712 regular_m job-naiv   yuedai PD       0:00      1 (QOSMaxJobsPerUserLimit)
+           4613708 regular_m job-bloc   yuedai  R       0:07      1 nid004961
+           4613705 regular_m job-blas   yuedai  R       0:16      1 nid005254
 student@login04:~/hw1/build> sqs
-JOBID    ST  USER   NAME         NODES REQUESTED USED  SUBMIT               QOS        SCHEDULED_START    REASON   
-9637622  PD  demmel  job-blocked  1     1:00      0:00  2018-01-19T11:42:17  debug  avail_in_~1.0_hrs  Priority
+JOBID            ST USER      NAME          NODES TIME_LIMIT       TIME  SUBMIT_TIME          QOS             START_TIME           FEATURES       NODELIST(REASON
+4613760          PD yuedai    job-naive     1           2:00       0:00  2023-01-11T21:38:08  debug           2023-01-11T21:38:35  cpu            (QOSMaxJobsPerU
+4613758          R  yuedai    job-blocked   1           2:00       0:02  2023-01-11T21:38:04  debug           2023-01-11T21:38:33  cpu            nid004649      
+4613754          R  yuedai    job-blas      1           2:00       0:07  2023-01-11T21:37:58  debug           2023-01-11T21:38:28  cpu            nid006483
+
 ```
 
 When our job is finished, we'll find new files in our build directory containing the output of our program.
