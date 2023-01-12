@@ -1,6 +1,6 @@
 # HW1: Matrix Multiplication
 
-See https://sites.google.com/lbl.gov/cs267-spr2021/hw-1 for details on the assignment.
+See https://sites.google.com/lbl.gov/cs267-spr2023/hw-1 for details on the assignment.
 
 ## Version control
 
@@ -14,9 +14,9 @@ Make sure it is set to **PRIVATE**.
 3. Once this is done, run the following commands:
 
 ```
-student@cori04:~/hw1> git remote rename origin staff
-student@cori04:~/hw1> git remote add origin https://github.com/YOUR_GITHUB_USERNAME/cs267-hw1.git
-student@cori04:~/hw1> git push -u origin main
+student@login04:~/hw1> git remote rename origin staff
+student@login04:~/hw1> git remote add origin https://github.com/YOUR_GITHUB_USERNAME/cs267-hw1.git
+student@login04:~/hw1> git push -u origin main
 ```
 
 If you prefer to use SSH to connect to GitHub,
@@ -24,7 +24,7 @@ If you prefer to use SSH to connect to GitHub,
 
 ## Module configuration
 
-Please [follow these instructions](https://bitbucket.org/Berkeley-CS267/cori-tutorial/src/master/cori-tutorial.md) to ensure your module configuration is correct to run the build system.
+Please [follow these instructions](https://bitbucket.org/Berkeley-CS267/perlmutter-tutorial/src/master/perlmutter-tutorial.md) to ensure your module configuration is correct to run the build system.
 
 ## Build system
 
@@ -46,7 +46,7 @@ From this _build directory_, it is now possible to _configure_ the build.
 The basic way to do this is:
 
 ```
-student@cori04:~/hw1/build> cmake -DCMAKE_BUILD_TYPE=Release ..
+student@login04:~/hw1/build> cmake -DCMAKE_BUILD_TYPE=Release ..
 ```
 
 This command tells CMake to generate the build files for HW1 in _Release_ mode.
@@ -56,7 +56,7 @@ Only `CMAKE_BUILD_TYPE` is required, though there are more variables that you mi
 1. `CMAKE_BUILD_TYPE` -- this is either `Debug` or `Release`.
 2. `CMAKE_C_FLAGS` -- this allows you to specify additional compiler flags.
 3. `MAX_SPEED` -- this should be equal to the maximum number of gigaflops-per-second (GF/s) your processor can execute.
-It is set to 36.8 by default, which matches Cori's processors.
+It is set to 56 by default, which matches Perlmutter's processors.
 4. `TEAM_NO` -- when you are ready to submit your assignment, set this to be your **two-digit** team number.
 5. `ALL_SIZES` -- set to `ON` to test against a large set of matrix sizes. `OFF` by default.
 
@@ -65,13 +65,13 @@ Yet when writing parallel code, it is often the case that problems arise only wh
 You can recover debugging symbols in Release mode (for use with `gdb`) by running:
 
 ```
-student@cori04:~/hw1/build> cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_FLAGS="-g3" ..
+student@login04:~/hw1/build> cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_FLAGS="-g3" ..
 ```
 
 Similarly, you can enable optimizations in Debug mode by running:
 
 ```
-student@cori04:~/hw1/build> cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_FLAGS="-O2" ..
+student@login04:~/hw1/build> cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_FLAGS="-O2" ..
 ```
 
 ## Compiling
@@ -79,13 +79,13 @@ student@cori04:~/hw1/build> cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_FLAGS="-O2"
 Once your build is configured, you can actually compile by running `make` from the build directory.
 
 ```
-student@cori04:~/hw1/build> make
+student@login04:~/hw1/build> make
 ```
 
 This will produce several files:
 
 ```
-student@cori04:~/hw1/build> ls
+student@login04:~/hw1/build> ls
 benchmark-blas     CMakeCache.txt       job-blas     Makefile
 benchmark-blocked  CMakeFiles           job-blocked
 benchmark-naive    cmake_install.cmake  job-naive
@@ -99,7 +99,7 @@ You can freely make configuration changes to the build and re-run make however y
 To run your code on the cluster, you can use the generated `job-blocked` script like so:
 
 ```
-student@cori04:~/hw1/build> sbatch job-blocked
+student@login04:~/hw1/build> sbatch job-blocked
 Submitted batch job 9637622
 ```
 
@@ -107,12 +107,12 @@ The job is now submitted to Cori's job queue.
 We can now check on the status of our submitted job using a few different commands.
 
 ```
-student@cori04:~/hw1/build> squeue -u demmel
+student@login04:~/hw1/build> squeue -u demmel
              JOBID PARTITION     NAME     USER ST       TIME  NODES NODELIST(REASON)
            9637622     debug job-bloc   demmel PD       0:00      1 (Priority)
-student@cori04:~/hw1/build> sqs
+student@login04:~/hw1/build> sqs
 JOBID    ST  USER   NAME         NODES REQUESTED USED  SUBMIT               QOS        SCHEDULED_START    REASON   
-9637622  PD  demmel  job-blocked  1     1:00      0:00  2018-01-19T11:42:17  debug_hsw  avail_in_~1.0_hrs  Priority
+9637622  PD  demmel  job-blocked  1     1:00      0:00  2018-01-19T11:42:17  debug  avail_in_~1.0_hrs  Priority
 ```
 
 When our job is finished, we'll find new files in our build directory containing the output of our program.
@@ -139,14 +139,14 @@ is your team's **two-digit** group number.
 Then configure the build with your group number:
 
 ```
-student@cori04:~/hw1/build> cmake -DGROUP_NO=NN ..
-student@cori04:~/hw1/build> make package
+student@login04:~/hw1/build> cmake -DGROUP_NO=NN ..
+student@login04:~/hw1/build> make package
 ```
 
 This should produce an archive containing the following files:
 
 ```
-student@cori04:~/hw1/build> tar tfz cs267GroupNN_hw1.tar.gz 
+student@login04:~/hw1/build> tar tfz cs267GroupNN_hw1.tar.gz 
 cs267GroupNN_hw1/cs267GroupNN_hw1.pdf
 cs267GroupNN_hw1/dgemm-blocked.c
 ```
