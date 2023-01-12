@@ -1,6 +1,6 @@
 # HW1: Matrix Multiplication
 
-See https://sites.google.com/lbl.gov/cs267spring2020/hw-1 for details on the assignment.
+See https://sites.google.com/lbl.gov/cs267-spr2021/hw-1 for details on the assignment.
 
 ## Version control
 
