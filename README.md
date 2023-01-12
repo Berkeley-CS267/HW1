@@ -121,7 +121,7 @@ JOBID            ST USER      NAME          NODES TIME_LIMIT       TIME  SUBMIT_
 ```
 
 When our job is finished, we'll find new files in our build directory containing the output of our program.
-For example, we'll find the files job-blas.o9637622 and job-blas.e9637622.
+For example, we'll find the files job-blas.o4613758 and job-blas.e4613758.
 The first file contains the standard output of our program, and the second file contains the standard error.
 
 Feel free to modify `job-blocked`, but note that changes to it will be overwritten by CMake if you reconfigure your
