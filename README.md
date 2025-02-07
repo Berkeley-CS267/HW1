@@ -16,5 +16,8 @@ Make sure it is set to **PRIVATE**.
 ```
 student@login04:~/hw1> git remote rename origin staff
 student@login04:~/hw1> git remote add origin https://github.com/YOUR_GITHUB_USERNAME/cs267-hw1.git
-student@login04:~/hw1> git push -u origin master
+student@login04:~/hw1> git push -u origin master 
+# If your have a different default branch name on github,
+# please run git push -u origin master:github-default-name, e.g.,
+# git push -u origin master:main if the default branch name is main.
 ```
